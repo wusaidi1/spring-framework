@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+	    http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="animal" class="com.jit.dto.Animal" scope="prototype" abstract="true"/>
+	<bean id="dog" class="com.jit.dto.Dog" parent="animal"/>
+</beans>

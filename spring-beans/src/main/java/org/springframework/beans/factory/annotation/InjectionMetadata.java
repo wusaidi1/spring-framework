@@ -115,7 +115,11 @@ public class InjectionMetadata {
 		Collection<InjectedElement> elementsToIterate =
 				(checkedElements != null ? checkedElements : this.injectedElements);
 		if (!elementsToIterate.isEmpty()) {
+
+			// 遍历注入
 			for (InjectedElement element : elementsToIterate) {
+				// 字段用 AutowiredFieldElement
+				// 方法用 AutowiredMethodElement
 				element.inject(target, beanName, pvs);
 			}
 		}
