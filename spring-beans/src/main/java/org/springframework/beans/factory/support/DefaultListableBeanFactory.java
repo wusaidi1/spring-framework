@@ -997,6 +997,8 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		for (String beanName : beanNames) {
 			// 从单例池中获取单例 Bean (该方法内使用了三级缓存用以解决循环依赖问题)
 			Object singletonInstance = getSingleton(beanName);
+
+			// 回到调 afterSingletonsInstantiated 方法
 			if (singletonInstance instanceof SmartInitializingSingleton) {
 				StartupStep smartInitialize = getApplicationStartup().start("spring.beans.smart-initialize")
 						.tag("beanName", beanName);

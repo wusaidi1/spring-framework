@@ -5,9 +5,12 @@ import com.jit.service.impl.UserServiceImpl;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.PropertyValues;
 import org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessor;
+import org.springframework.beans.factory.config.SmartInstantiationAwareBeanPostProcessor;
 import org.springframework.beans.factory.support.MergedBeanDefinitionPostProcessor;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.stereotype.Component;
+
+import java.lang.reflect.Constructor;
 
 /**
  * <p>
@@ -17,28 +20,36 @@ import org.springframework.stereotype.Component;
  * @Author: JIT
  */
 @Component
-public class CustomBeanPostProcessor implements InstantiationAwareBeanPostProcessor, MergedBeanDefinitionPostProcessor {
+public class CustomBeanPostProcessor implements SmartInstantiationAwareBeanPostProcessor, MergedBeanDefinitionPostProcessor {
 
 	@Override
 	public Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) throws BeansException {
 		if (beanName.equals("userServiceImpl"))
 			System.out.println("01. before instance");
-		return null;
+		return SmartInstantiationAwareBeanPostProcessor.super.postProcessBeforeInstantiation(beanClass, beanName);
+	}
+
+	@Override
+	public Constructor<?>[] determineCandidateConstructors(Class<?> beanClass, String beanName) throws BeansException {
+		if (beanName.equals("userServiceImpl")) {
+			System.out.println("02. determine constructors");
+		}
+		return SmartInstantiationAwareBeanPostProcessor.super.determineCandidateConstructors(beanClass, beanName);
 	}
 
 	@Override
 	public void postProcessMergedBeanDefinition(RootBeanDefinition beanDefinition, Class<?> beanType, String beanName) {
 		if (beanName.equals("userServiceImpl")) {
 			beanDefinition.setInitMethodName("init");
-			System.out.println("03. post mergedBeanDefinition call back");
+			System.out.println("04. post mergedBeanDefinition call back");
 		}
 	}
 
 	@Override
 	public boolean postProcessAfterInstantiation(Object bean, String beanName) throws BeansException {
 		if (beanName.equals("userServiceImpl"))
-			System.out.println("04. after instance");
-		return true;
+			System.out.println("05. after instance");
+		return SmartInstantiationAwareBeanPostProcessor.super.postProcessAfterInstantiation(bean, beanName);
 	}
 
 	@Override
@@ -46,22 +57,23 @@ public class CustomBeanPostProcessor implements InstantiationAwareBeanPostProces
 		if (beanName.equals("userServiceImpl")) {
 			UserService userService = (UserService) bean;
 			userService.getOrderService();
-			System.out.println("05. before properties");
+			System.out.println("06. before properties");
 		}
-		return null;
+		return SmartInstantiationAwareBeanPostProcessor.super.postProcessProperties(pvs, bean, beanName);
 	}
+
 
 	@Override
 	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
 		if (beanName.equals("userServiceImpl"))
-			System.out.println("07. before init");
-		return InstantiationAwareBeanPostProcessor.super.postProcessBeforeInitialization(bean, beanName);
+			System.out.println("09. before init");
+		return SmartInstantiationAwareBeanPostProcessor.super.postProcessBeforeInitialization(bean, beanName);
 	}
 
 	@Override
 	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
 		if (beanName.equals("userServiceImpl"))
-			System.out.println("11. after init");
-		return InstantiationAwareBeanPostProcessor.super.postProcessAfterInitialization(bean, beanName);
+			System.out.println("12. after init");
+		return SmartInstantiationAwareBeanPostProcessor.super.postProcessAfterInitialization(bean, beanName);
 	}
 }

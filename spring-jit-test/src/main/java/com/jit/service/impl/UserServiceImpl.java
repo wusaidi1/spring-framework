@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService, BeanNameAware, Initializing
 	private OrderService orderService;
 
 	public UserServiceImpl() {
-		System.out.println("02. post constructor ");
+		System.out.println("03. post constructor ");
 	}
 
 	@Override
@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService, BeanNameAware, Initializing
 
 	@Override
 	public void setBeanName(String name) {
-		System.out.println("06. post aware interface");
+		System.out.println("07. post aware interface");
 	}
 
 	@Override
@@ -53,16 +53,16 @@ public class UserServiceImpl implements UserService, BeanNameAware, Initializing
 
 	@Override
 	public void afterPropertiesSet() {
-		System.out.println("09. init callback (afterPropertiesSet)");
+		System.out.println("10. init callback (afterPropertiesSet)");
 	}
 
 	public void init() {
-		System.out.println("10. init callback (post init method)");
+		System.out.println("11. init callback (post init method)");
 	}
 
 	@Override
 	public void destroy() {
-		System.out.println("12. destroy callback (destroy method)");
+		System.out.println("13. destroy callback (destroy method)");
 	}
 }
 
