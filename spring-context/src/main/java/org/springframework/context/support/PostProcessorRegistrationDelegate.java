@@ -109,7 +109,8 @@ final class PostProcessorRegistrationDelegate {
 			}
 			sortPostProcessors(currentRegistryProcessors, beanFactory);
 			registryProcessors.addAll(currentRegistryProcessors);
-			// 根据前面读取到的包路径扫描 bean，并创建 BeanDefinition
+			// 本质上是调用 ConfigurationClassPostProcessor 类的postProcessBeanDefinitionRegistry 方法
+			// 并在方法内部根据前面读取到的包路径扫描 bean，然后创建 BeanDefinition
 			invokeBeanDefinitionRegistryPostProcessors(currentRegistryProcessors, registry, beanFactory.getApplicationStartup());
 			currentRegistryProcessors.clear();
 
@@ -140,12 +141,15 @@ final class PostProcessorRegistrationDelegate {
 				}
 				sortPostProcessors(currentRegistryProcessors, beanFactory);
 				registryProcessors.addAll(currentRegistryProcessors);
+				// 调用自定义实现了 BeanDefinitionRegistryPostProcessors 接口的实现类的 postProcessBeanDefinitionRegistry 方法
 				invokeBeanDefinitionRegistryPostProcessors(currentRegistryProcessors, registry, beanFactory.getApplicationStartup());
 				currentRegistryProcessors.clear();
 			}
 
 			// Now, invoke the postProcessBeanFactory callback of all processors handled so far.
+			// 调用自定义实现了 BeanDefinitionRegistryPostProcessors 接口的实现类的 postProcessBeanFactory 方法
 			invokeBeanFactoryPostProcessors(registryProcessors, beanFactory);
+			// 调用自定义实现了 BeanFactoryPostProcessor 接口的实现类的 postProcessBeanFactory 方法
 			invokeBeanFactoryPostProcessors(regularPostProcessors, beanFactory);
 		}
 
@@ -251,6 +255,7 @@ final class PostProcessorRegistrationDelegate {
 
 		// First, register the BeanPostProcessors that implement PriorityOrdered.
 		sortPostProcessors(priorityOrderedPostProcessors, beanFactory);
+		// 注册所有的 BeanPostProcessors
 		registerBeanPostProcessors(beanFactory, priorityOrderedPostProcessors);
 
 		// Next, register the BeanPostProcessors that implement Ordered.
