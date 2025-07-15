@@ -20,7 +20,7 @@ import javax.annotation.PostConstruct;
  *
  * @Author: JIT
  */
-@Service
+//@Service
 public class UserServiceImpl implements UserService, BeanNameAware, InitializingBean, DisposableBean {
 
 	@Autowired

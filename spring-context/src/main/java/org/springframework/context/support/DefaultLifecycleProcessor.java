@@ -157,6 +157,7 @@ public class DefaultLifecycleProcessor implements LifecycleProcessor, BeanFactor
 		});
 
 		if (!phases.isEmpty()) {
+			// 调用 SmartLifecycle 的 start 方法
 			phases.values().forEach(LifecycleGroup::start);
 		}
 	}

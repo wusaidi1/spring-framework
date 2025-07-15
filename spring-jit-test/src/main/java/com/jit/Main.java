@@ -20,6 +20,9 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class Main {
 	public static void main(String[] args) {
 
+		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Main.class);
+		context.close();
+
 //		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("spring.xml");
 //		System.out.println(context.getBean("dog"));
 //		System.out.println(context.getBean("dog"));
@@ -29,9 +32,9 @@ public class Main {
 //		System.out.println(context.getBean("&animalFactoryBean"));
 //		System.out.println(context.getBean("animalFactoryBean"));
 
-		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Main.class);
-		UserService userService = context.getBean(UserService.class);
-		userService.sayHello();
-		context.close();
+//		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Main.class);
+//		UserService userService = context.getBean(UserService.class);
+//		userService.sayHello();
+//		context.close();
 	}
 }
