@@ -435,12 +435,12 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 				try {
 					// 使用 ASM 技术，读取类的元数据信息
 					MetadataReader metadataReader = getMetadataReaderFactory().getMetadataReader(resource);
-					// 判断是否有 @Component 注解
+					// 判断是否有 @Component 注解，使用 includeFilters 判断
 					if (isCandidateComponent(metadataReader)) {
 						// 构造 BeanDefinition，这里的 BeanDefinition 只赋值了 beanClass 属性
 						ScannedGenericBeanDefinition sbd = new ScannedGenericBeanDefinition(metadataReader);
 						sbd.setSource(resource);
-						if (isCandidateComponent(sbd)) {
+						if (isCandidateComponent(sbd)) { // 判断类的元数据否有 @Component 注解
 							if (debugEnabled) {
 								logger.debug("Identified candidate component class: " + resource);
 							}
