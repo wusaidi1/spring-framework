@@ -16,7 +16,9 @@ dependencies {
 	implementation("org.mybatis:mybatis:3.4.5")
 	implementation("mysql:mysql-connector-java:8.0.33")
 	implementation("org.mybatis:mybatis-spring:1.3.2")
+	implementation("org.aspectj:aspectjweaver:1.9.7")
 //	implementation("org.mybatis:mybatis-spring:2.0.6")
+//	implementation("org.aspectj:aspectjweaver:1.9.5")
 }
 
 tasks.test {

@@ -2,20 +2,28 @@ package com.jit;
 
 import com.jit.mapper.OrderMapper;
 import com.jit.mybatis.CustomMapperScan;
+import com.jit.service.FooService;
 import com.jit.service.OrderService;
 import com.jit.service.UserService;
+import com.jit.service.impl.FooServiceImpl;
+import com.jit.service.impl.UserServiceImpl;
+import org.aopalliance.aop.Advice;
+import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.aop.Pointcut;
+import org.springframework.aop.PointcutAdvisor;
+import org.springframework.aop.framework.ProxyFactory;
+import org.springframework.aop.support.StaticMethodMatcherPointcut;
+import org.springframework.context.annotation.*;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 
 /**
  * <p>
@@ -26,8 +34,9 @@ import java.io.InputStream;
  */
 @Configuration
 @ComponentScan
-@CustomMapperScan("com.jit.mapper")
-@MapperScan("com.jit.mapper")
+//@CustomMapperScan("com.jit.mapper")
+//@MapperScan("com.jit.mapper")
+@EnableAspectJAutoProxy
 public class Main {
 	public static void main(String[] args) throws IOException {
 
@@ -62,9 +71,47 @@ public class Main {
 //		sqlSession.flushStatements();
 //		sqlSession.commit();
 
+//		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Main.class);
+//		OrderService orderService = context.getBean(OrderService.class);
+//		System.out.println(orderService.queryOrderPrice());
+
 		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Main.class);
-		OrderService orderService = context.getBean(OrderService.class);
-		System.out.println(orderService.queryOrderPrice());
+		FooService fooService = context.getBean(FooService.class);
+		fooService.hello();
+
+
+//		FooServiceImpl fooServiceImpl = new FooServiceImpl();
+//		ProxyFactory proxyFactory = new ProxyFactory();
+//		proxyFactory.setTarget(fooServiceImpl);
+//		proxyFactory.addAdvisor (new PointcutAdvisor() {
+//			@Override
+//			public Pointcut getPointcut() {
+//				return new StaticMethodMatcherPointcut() {
+//					@Override
+//					public boolean matches(Method method, Class<?> targetClass) {
+//						return method.getName().equals("hello");
+//					}
+//				};
+//			}
+//
+//			@Override
+//			public Advice getAdvice() {
+//				return (MethodInterceptor) invocation -> {
+//					System.out.println("before invoke target method...");
+//					Object result = invocation.proceed();
+//					System.out.println("after invoke target method...");
+//					return result;
+//				};
+//			}
+//
+//			@Override
+//			public boolean isPerInstance() {
+//				return false;
+//			}
+//		});
+//
+//		FooService fooService = (FooService) proxyFactory.getProxy();
+//		fooService.hello();
 	}
 
 	@Bean

@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
  *
  * @Author: JIT
  */
-@Service
+//@Service
 public class OrderServiceImpl implements OrderService {
 
 	@Autowired
