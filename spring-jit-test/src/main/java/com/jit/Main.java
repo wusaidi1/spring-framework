@@ -20,7 +20,13 @@ import org.springframework.aop.PointcutAdvisor;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.aop.support.StaticMethodMatcherPointcut;
 import org.springframework.context.annotation.*;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
@@ -37,6 +43,7 @@ import java.lang.reflect.Method;
 //@CustomMapperScan("com.jit.mapper")
 //@MapperScan("com.jit.mapper")
 @EnableAspectJAutoProxy
+@EnableTransactionManagement
 public class Main {
 	public static void main(String[] args) throws IOException {
 
@@ -75,9 +82,9 @@ public class Main {
 //		OrderService orderService = context.getBean(OrderService.class);
 //		System.out.println(orderService.queryOrderPrice());
 
-		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Main.class);
-		FooService fooService = context.getBean(FooService.class);
-		fooService.hello();
+//		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Main.class);
+//		FooService fooService = context.getBean(FooService.class);
+//		fooService.hello();
 
 
 //		FooServiceImpl fooServiceImpl = new FooServiceImpl();
@@ -112,12 +119,34 @@ public class Main {
 //
 //		FooService fooService = (FooService) proxyFactory.getProxy();
 //		fooService.hello();
+
+
+		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Main.class);
+		FooService fooService = context.getBean(FooService.class);
+		fooService.add();
+	}
+
+//	@Bean
+//	public SqlSessionFactory sqlSessionFactory() throws IOException {
+//		InputStream inputStream = Resources.getResourceAsStream("mybatis.xml");
+//		SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+//		return sqlSessionFactory;
+//	}
+
+	@Bean
+	public DataSource dataSource(){
+		DriverManagerDataSource dataSource = new DriverManagerDataSource();
+		dataSource.setUrl("jdbc:mysql://117.72.9.187:13306/evo_x?useUnicode=true&amp;characterEncoding=utf8&amp;zeroDateTimeBehavior=convertToNull&amp;useSSL=false&amp;serverTimezone=GMT%2B8&amp;allowMultiQueries=true");
+		dataSource.setUsername("root");
+		dataSource.setPassword("6vnZP7TJ");
+		dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+		return dataSource;
 	}
 
 	@Bean
-	public SqlSessionFactory sqlSessionFactory() throws IOException {
-		InputStream inputStream = Resources.getResourceAsStream("mybatis.xml");
-		SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
-		return sqlSessionFactory;
+	public PlatformTransactionManager transactionManager(){
+		DataSourceTransactionManager transactionManager=new DataSourceTransactionManager();
+		transactionManager.setDataSource(dataSource());
+		return transactionManager;
 	}
 }

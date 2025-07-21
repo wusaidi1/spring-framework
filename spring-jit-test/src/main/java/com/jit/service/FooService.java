@@ -9,5 +9,7 @@ package com.jit.service;
  */
 public interface FooService {
 
-	public void hello();
+	void add();
+
+	void hello();
 }
