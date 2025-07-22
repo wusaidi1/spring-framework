@@ -1132,6 +1132,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			this.preInstantiationThread.remove();
 		}
 
+		// 等待所有异步创建 Bean 执行完成
 		if (!futures.isEmpty()) {
 			try {
 				CompletableFuture.allOf(futures.toArray(new CompletableFuture<?>[0])).join();
@@ -1156,6 +1157,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	@Nullable
 	private CompletableFuture<?> preInstantiateSingleton(String beanName, RootBeanDefinition mbd) {
 		if (mbd.isBackgroundInit()) {
+			// 获取配置的线程池
 			Executor executor = getBootstrapExecutor();
 			if (executor != null) {
 				String[] dependsOn = mbd.getDependsOn();
@@ -1164,10 +1166,13 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 						getBean(dep);
 					}
 				}
+				// 执行异步实例化非懒加载单例 Bean
 				CompletableFuture<?> future = CompletableFuture.runAsync(
 						() -> instantiateSingletonInBackgroundThread(beanName), executor);
+				// 将 bean 放入三级缓存中，用来解决异步创建过程中的循环依赖问题
 				addSingletonFactory(beanName, () -> {
 					try {
+						// 等待异步创建 Bean 执行完成
 						future.join();
 					}
 					catch (CompletionException ex) {
@@ -1183,6 +1188,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			}
 		}
 
+		// 懒加载的 Bean 走同步逻辑
 		if (!mbd.isLazyInit()) {
 			try {
 				instantiateSingleton(beanName);
